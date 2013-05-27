@@ -1,0 +1,51 @@
+NAME
+    Parallel::DownloadQueue - Fetch multiple URLs via Thread::Queue
+
+SYNOPSIS
+      my $pdq = Parallel::DownloadQueue->new(threads => 10);
+      my @results = $pdq->load(@urls);
+
+DESCRIPTION
+    Parallel::DownloadQueue fetches multiple URLs via LWP::UserAgent and
+    Thread::Queue and returns a list containing all HTTP::Response
+    responses.
+
+PARAMETERS
+    Parallel::DownloadQueue requires the following constructor parameters:
+
+  threads
+    The number of threads (default: 6)
+
+  ua
+    An instance of LWP::UserAgent (default: create a new user agent
+    automatically)
+
+  log
+    A CODEREF that will be called before each request is executed. It
+    receives two parameters: The current thread id and the url which will be
+    fetched.
+
+      my $pdq = Parallel::DownloadQueue->new(
+          log => sub {
+              my ($thread, $url) = @_;
+              say "[$thread] $url";
+          }
+      );
+
+METHODS
+  load
+    Fetches all specified URLs and returns the result after the last request
+    is done.
+
+      my @results = $pdq->load('http://cpan.org', 'http://perl.com');
+
+SEE ALSO
+    threads, Thread::Queue, LWP::UserAgent, Moo.
+
+AUTHOR
+    Sebastian Stumpf, <sepp AT perlhacker DOT org>
+
+LICENSE
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
